@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/nav_city_manage"
+            android:icon="@mipmap/ic_location"
+            android:title="城市管理" />
+
+        <item
+            android:id="@+id/nav_location"
+            android:icon="@mipmap/ic_refresh"
+            android:title="定位" />
+
+        <item
+            android:id="@+id/nav_night_mode"
+            android:icon="@mipmap/ic_night"
+            android:title="夜间模式" />
+
+        <item
+            android:id="@+id/nav_exit"
+            android:icon="@mipmap/ic_exit"
+            android:title="退出" />
+
+</menu>
