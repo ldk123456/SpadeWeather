@@ -46,10 +46,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         final NavigationView navView=findViewById(R.id.nav_view);
-        ActionBar actionBar=getSupportActionBar();
+        final ActionBar actionBar=getSupportActionBar();
         if (actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            actionBar.setTitle(getIntent().getStringExtra("city_name"));
         }
         navView.setNavigationItemSelectedListener(new NavigationView.
                 OnNavigationItemSelectedListener() {
@@ -57,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_city_manage:
-                        Toast.makeText(MainActivity.this, "city manage",
-                                Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(MainActivity.this, CityManageActivity.class);
+                        intent.putExtra("city_name", actionBar.getTitle());
+                        startActivity(intent);
                         break;
                     case R.id.nav_refresh:
                         Toast.makeText(MainActivity.this, "refresh",
