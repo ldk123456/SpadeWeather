@@ -1,6 +1,7 @@
 package com.example.a.spadeweather;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +24,6 @@ import org.w3c.dom.Text;
 
 import java.util.PrimitiveIterator;
 
-import interfaces.heweather.com.interfacesmodule.view.HeWeather;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_city_manage:
-                        Toast.makeText(MainActivity.this, "city",
+                        Toast.makeText(MainActivity.this, "city manage",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_refresh:
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "search",
-                        Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this, SearchCityActivity.class);
+                startActivity(intent);
             }
         });
     }
