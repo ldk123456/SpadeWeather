@@ -1,12 +1,17 @@
 package com.example.a.spadeweather;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationListener;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,11 +22,19 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PrimitiveIterator;
 
 
@@ -30,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private long exitTime;
+    private ActionBar mActionBar;
+    public LocationClient mLocationClient;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +62,18 @@ public class MainActivity extends AppCompatActivity {
                 refreshWeather();
             }
         });
+        mLocationClient=new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(new MyLocationListener());
+        progressBar=findViewById(R.id.progress_bar);
+        LocationClientOption option = new LocationClientOption();
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
         final NavigationView navView=findViewById(R.id.nav_view);
-        final ActionBar actionBar=getSupportActionBar();
-        if (actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-            actionBar.setTitle(getIntent().getStringExtra("city_name"));
+        mActionBar=getSupportActionBar();
+        if (mActionBar!=null){
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            mActionBar.setTitle(getIntent().getStringExtra("city_name"));
         }
         navView.setNavigationItemSelectedListener(new NavigationView.
                 OnNavigationItemSelectedListener() {
@@ -60,12 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.nav_city_manage:
                         Intent intent=new Intent(MainActivity.this, CityManageActivity.class);
-                        intent.putExtra("city_name", actionBar.getTitle());
+                        intent.putExtra("city_name", mActionBar.getTitle());
                         startActivity(intent);
                         break;
-                    case R.id.nav_refresh:
-                        Toast.makeText(MainActivity.this, "refresh",
-                                Toast.LENGTH_SHORT).show();
+                    case R.id.nav_relocation:
+                        checkPermissions();
                         break;
                     case R.id.nav_night_mode:
                         Toast.makeText(MainActivity.this, "night",
@@ -103,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        checkPermissions();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -140,6 +162,61 @@ public class MainActivity extends AppCompatActivity {
             finish();
             System.exit(0);
             android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    }
+    private void checkPermissions(){
+        List<String> permissionList=new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (!permissionList.isEmpty()){
+            String[] permissions=permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(MainActivity.this, permissions,1);
+        }else {
+            requestLocation();
+        }
+    }
+    private void requestLocation(){
+        mLocationClient.start();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                          int[] grantResults){
+        switch (requestCode){
+            case 1:
+                if (grantResults.length>0){
+                    for (int result:grantResults){
+                        if (result!=PackageManager.PERMISSION_GRANTED){
+                            Toast.makeText(this, "必须同意权限才能使用程序",
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
+                    }
+                    requestLocation();
+                }else {
+                    Toast.makeText(this, "发生未知错误",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            default:
+        }
+    }
+    public class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            progressBar.setVisibility(View.GONE);
+            mActionBar.setTitle(bdLocation.getCity().substring(0,2));
         }
     }
 }

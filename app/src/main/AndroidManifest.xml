@@ -24,6 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="3KvwkyQp1aDRmIemF39kqmYGDCZwgUML" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +34,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"></service>
         <activity android:name=".SearchCityActivity" />
         <activity android:name=".CityManageActivity"></activity>
     </application>

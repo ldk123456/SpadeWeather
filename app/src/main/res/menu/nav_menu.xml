@@ -7,9 +7,9 @@
             android:title="城市管理" />
 
         <item
-            android:id="@+id/nav_refresh"
+            android:id="@+id/nav_relocation"
             android:icon="@mipmap/ic_refresh"
-            android:title="刷新" />
+            android:title="重新定位" />
 
         <item
             android:id="@+id/nav_night_mode"
