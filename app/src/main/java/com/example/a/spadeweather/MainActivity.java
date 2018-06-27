@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private long exitTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,5 +129,17 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+    @Override
+    public void onBackPressed() {
+        if(System.currentTimeMillis() - exitTime > 2000) {
+            Snackbar.make(this.mDrawerLayout, "再按一次退出程序",
+                    Snackbar.LENGTH_LONG).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            finish();
+            System.exit(0);
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
     }
 }
