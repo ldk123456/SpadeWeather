@@ -55,6 +55,7 @@ public class CitySearchAdapter extends RecyclerView.Adapter<CitySearchAdapter.Vi
                 }
                 Intent intent=new Intent(parent.getContext(), MainActivity.class);
                 intent.putExtra("city_name", cityName);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 parent.getContext().startActivity(intent);
                 SearchCityActivity activity = (SearchCityActivity) parent.getContext();
                 activity.finish();

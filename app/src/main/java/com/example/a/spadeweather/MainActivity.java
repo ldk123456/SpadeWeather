@@ -30,7 +30,9 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.example.a.spadeweather.database.SearchedCity;
 
+import org.litepal.LitePal;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ import java.util.PrimitiveIterator;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private long exitTime;
     private ActionBar mActionBar;
     public LocationClient mLocationClient;
@@ -54,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar title=findViewById(R.id.title);
         setSupportActionBar(title);
         mDrawerLayout=findViewById(R.id.drawer_layout);
-        swipeRefreshLayout=findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout=findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshWeather();
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
             }
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(System.currentTimeMillis() - exitTime > 2000) {
-            Snackbar.make(this.mDrawerLayout, "再按一次退出程序",
+            Snackbar.make(this.mSwipeRefreshLayout, "再按一次退出程序",
                     Snackbar.LENGTH_LONG).show();
             exitTime = System.currentTimeMillis();
         } else {
@@ -216,7 +218,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             progressBar.setVisibility(View.GONE);
-            mActionBar.setTitle(bdLocation.getCity().substring(0,2));
+            String cityName=bdLocation.getCity().substring(0,2);
+            mActionBar.setTitle(cityName);
+            List<SearchedCity> searchedCities= LitePal.where("cityName = ?", cityName)
+                    .find(SearchedCity.class);
+            if (searchedCities.size()==0){
+                SearchedCity searchedCity=new SearchedCity();
+                searchedCity.setCityName(cityName);
+                searchedCity.save();
+            }
         }
     }
 }

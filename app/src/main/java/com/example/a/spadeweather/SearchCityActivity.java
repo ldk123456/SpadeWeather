@@ -116,10 +116,10 @@ public class SearchCityActivity extends AppCompatActivity {
     public void showCityInfo(City city){
         final List<String> cityNameList=new ArrayList<>();
         for (int i = 0; i < city.basic.length; i++) {
-            if (city.basic[i].cityName.equals(city.basic[i].parentCity)) {
-                cityNameList.add(city.basic[i].cityName + " , " + city.basic[i].adminArea);
-            }else if(city.basic[i].cityName.equals(city.basic[i].adminArea)){
-                cityNameList.add(city.basic[i].cityName);
+            if (city.basic[i].cityName.equals(city.basic[i].adminArea)) {
+                cityNameList.add(city.basic[i].cityName );
+            }else if(city.basic[i].cityName.equals(city.basic[i].parentCity)){
+                cityNameList.add(city.basic[i].cityName+ " , " + city.basic[i].adminArea);
             }else {
                 cityNameList.add(city.basic[i].cityName+" , "+city.basic[i].parentCity);
             }
