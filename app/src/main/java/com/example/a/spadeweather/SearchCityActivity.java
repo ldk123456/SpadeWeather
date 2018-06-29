@@ -119,9 +119,9 @@ public class SearchCityActivity extends AppCompatActivity {
             if (city.basic[i].cityName.equals(city.basic[i].adminArea)) {
                 cityNameList.add(city.basic[i].cityName );
             }else if(city.basic[i].cityName.equals(city.basic[i].parentCity)){
-                cityNameList.add(city.basic[i].cityName+ " , " + city.basic[i].adminArea);
+                cityNameList.add(city.basic[i].cityName+ " - " + city.basic[i].adminArea);
             }else {
-                cityNameList.add(city.basic[i].cityName+" , "+city.basic[i].parentCity);
+                cityNameList.add(city.basic[i].cityName+" - "+city.basic[i].parentCity);
             }
         }
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);

@@ -41,8 +41,9 @@ public class CityManageActivity extends AppCompatActivity {
         cityManageList.setAdapter(adapter);
     }
     private void initList(){
+        String cityName=getIntent().getStringExtra("city_name");
         for (SearchedCity searchedCity: LitePal.findAll(SearchedCity.class)){
-            if (searchedCity.getCityName().equals(getIntent().getStringExtra("city_name"))){
+            if (searchedCity.getCityName().equals(cityName)){
                 searchedCity.setCurrentCityText("当前显示");
                 searchedCity.setCurrentCityImage(R.mipmap.ic_current_city);
             }

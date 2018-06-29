@@ -1,6 +1,5 @@
 package com.example.a.spadeweather.adapter;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;

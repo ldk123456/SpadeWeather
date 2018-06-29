@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBar mActionBar;
     public LocationClient mLocationClient;
     private ProgressBar progressBar;
+    private static int LOCATION_FLAG=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +68,13 @@ public class MainActivity extends AppCompatActivity {
         mLocationClient=new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
         progressBar=findViewById(R.id.progress_bar);
-        LocationClientOption option = new LocationClientOption();
-        option.setIsNeedAddress(true);
-        mLocationClient.setLocOption(option);
         final NavigationView navView=findViewById(R.id.nav_view);
         mActionBar=getSupportActionBar();
         if (mActionBar!=null){
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-            mActionBar.setTitle(getIntent().getStringExtra("city_name"));
+            String cityName=getIntent().getStringExtra("city_name");
+            mActionBar.setTitle(cityName);
         }
         navView.setNavigationItemSelectedListener(new NavigationView.
                 OnNavigationItemSelectedListener() {
@@ -83,12 +82,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_city_manage:
-                        Intent intent=new Intent(MainActivity.this, CityManageActivity.class);
+                        Intent intent=new Intent(MainActivity.this,
+                                CityManageActivity.class);
                         intent.putExtra("city_name", mActionBar.getTitle());
                         startActivity(intent);
-                        break;
-                    case R.id.nav_relocation:
-                        checkPermissions();
                         break;
                     case R.id.nav_night_mode:
                         Toast.makeText(MainActivity.this, "night",
@@ -126,7 +123,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        checkPermissions();
+        if (LOCATION_FLAG==0){
+            progressBar.setVisibility(View.GONE);
+        }
+        if (LOCATION_FLAG==1){
+            progressBar.setVisibility(View.VISIBLE);
+            checkPermissions();
+            LOCATION_FLAG=0;
+        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -183,11 +187,13 @@ public class MainActivity extends AppCompatActivity {
         if (!permissionList.isEmpty()){
             String[] permissions=permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(MainActivity.this, permissions,1);
-        }else {
-            requestLocation();
         }
+        requestLocation();
     }
     private void requestLocation(){
+        LocationClientOption option = new LocationClientOption();
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
         mLocationClient.start();
     }
     @Override
