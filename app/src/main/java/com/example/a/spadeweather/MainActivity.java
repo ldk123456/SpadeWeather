@@ -224,7 +224,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             progressBar.setVisibility(View.GONE);
-            String cityName=bdLocation.getCity().substring(0,2);
+            int length=bdLocation.getDistrict().length();
+            String name1=bdLocation.getDistrict().substring(0, length-1);
+            String name2=bdLocation.getCity().split("市")[0];
+            String cityName=name1+" - "+name2;
             mActionBar.setTitle(cityName);
             List<SearchedCity> searchedCities= LitePal.where("cityName = ?", cityName)
                     .find(SearchedCity.class);
