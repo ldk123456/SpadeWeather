@@ -33,7 +33,6 @@ public class SearchCityActivity extends AppCompatActivity {
 
     private EditText searchText;
     private RecyclerView cityList;
-    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +83,7 @@ public class SearchCityActivity extends AppCompatActivity {
     }
     public void requestCity(final String cityName){
         String searchCityUrl="https://search.heweather.com/find?location="+cityName
-                +"&key=294858754f4f457fba305b0aed27f8e3";
+                +"&key=294858754f4f457fba305b0aed27f8e3&group=cn";
         HttpUtil.sendOkHttpRequest(searchCityUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -119,9 +118,9 @@ public class SearchCityActivity extends AppCompatActivity {
             if (city.basic[i].cityName.equals(city.basic[i].adminArea)) {
                 cityNameList.add(city.basic[i].cityName );
             }else if(city.basic[i].cityName.equals(city.basic[i].parentCity)){
-                cityNameList.add(city.basic[i].cityName+ " - " + city.basic[i].adminArea);
+                cityNameList.add(city.basic[i].cityName+ "," + city.basic[i].adminArea);
             }else {
-                cityNameList.add(city.basic[i].cityName+" - "+city.basic[i].parentCity);
+                cityNameList.add(city.basic[i].cityName+","+city.basic[i].parentCity);
             }
         }
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
