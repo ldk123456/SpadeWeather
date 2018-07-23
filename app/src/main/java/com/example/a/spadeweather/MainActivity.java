@@ -23,6 +23,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,8 +38,10 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.a.spadeweather.GSON.City;
+import com.example.a.spadeweather.GSON.DailyForecast;
 import com.example.a.spadeweather.GSON.NowAir;
 import com.example.a.spadeweather.GSON.NowWeather;
+import com.example.a.spadeweather.adapter.DailyForecastAdapter;
 import com.example.a.spadeweather.database.SearchedCity;
 import com.example.a.spadeweather.util.HttpUtil;
 import com.example.a.spadeweather.util.ShowUtil;
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView nowAirText;
     private TextView updateTimeText;
 
+    private RecyclerView dailyForecastLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         nowAirText=findViewById(R.id.now_air_text);
         updateTimeText=findViewById(R.id.updateTime_text);
 
+        dailyForecastLayout=findViewById(R.id.daily_forecast_layout);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -303,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
         mActionBar.setTitle(cityName);
         requestNowWeather(cityName);
         requestNowAir(cityName);
+        requestDailyForecast(cityName);
         mSwipeRefreshLayout.setRefreshing(false);
         mProgressBar.setVisibility(View.INVISIBLE);
         weatherLayout.setVisibility(View.VISIBLE);
@@ -391,5 +398,39 @@ public class MainActivity extends AppCompatActivity {
         String airText=nowAir.aqi.airText;
         nowAirNumber.setText(airNumber);
         nowAirText.setText(airText);
+    }
+    private void requestDailyForecast(final String cityName){
+        final String dailyForecastUrl="https://free-api.heweather.com/s6/weather/forecast?location="
+                +cityName+"&key="+KEY;
+        HttpUtil.sendOkHttpRequest(dailyForecastUrl, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Snackbar.make(mSwipeRefreshLayout, "请求未来三天天气信息失败",
+                        Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String nowWeatherResponseText=response.body().string();
+                final DailyForecast dailyForecast=Utility.handleDailyForecastResponse(nowWeatherResponseText);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dailyForecast!=null&&dailyForecast.status.equals("ok")){
+                            showDailyForecast(dailyForecast);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    private void showDailyForecast(DailyForecast dailyForecast){
+        List<DailyForecast.Forecast> dailyForecastList=dailyForecast.dailyForecastList;
+        StaggeredGridLayoutManager layoutManager=new
+                StaggeredGridLayoutManager(dailyForecastList.size(),
+                StaggeredGridLayoutManager.VERTICAL);
+        dailyForecastLayout.setLayoutManager(layoutManager);
+        DailyForecastAdapter dailyForecastAdapter=new DailyForecastAdapter(dailyForecastList);
+        dailyForecastLayout.setAdapter(dailyForecastAdapter);
     }
 }

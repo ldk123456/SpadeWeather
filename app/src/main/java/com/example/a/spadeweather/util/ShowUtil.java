@@ -2,6 +2,9 @@ package com.example.a.spadeweather.util;
 
 import com.example.a.spadeweather.R;
 
+import java.util.Calendar;
+
+
 public class ShowUtil {
     public static String showTime(String updateTime){
         String month=updateTime.substring(5,7);
@@ -164,5 +167,22 @@ public class ShowUtil {
 
         }
         return 0;
+    }
+    public static String showDailyTime(String dailyUpdateTime){
+        Calendar now=Calendar.getInstance();
+        int nowDay=now.get(Calendar.DAY_OF_MONTH);
+        String nowDayString=Integer.toString(nowDay);
+        char c1=dailyUpdateTime.charAt(dailyUpdateTime.length()-1);
+        char c2=nowDayString.charAt(nowDayString.length()-1);
+        switch (c1-c2){
+            case 0:
+                return "今天";
+            case 1:
+                return "明天";
+            case 2:
+                return "后天";
+            default:
+        }
+        return null;
     }
 }

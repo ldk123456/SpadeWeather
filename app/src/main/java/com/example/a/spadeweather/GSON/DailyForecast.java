@@ -2,6 +2,8 @@ package com.example.a.spadeweather.GSON;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class DailyForecast {
     public String status;
     public class Forecast{
@@ -11,9 +13,11 @@ public class DailyForecast {
         public String weatherImage;
         @SerializedName("cond_txt_d")
         public String weatherText;
-        public int temp_max;
-        public int temp_min;
+        @SerializedName("tmp_min")
+        public String minTemperature;
+        @SerializedName("tmp_max")
+        public String maxTemperature;
     }
     @SerializedName("daily_forecast")
-    public Forecast[] dailyForecast;
+    public List<Forecast> dailyForecastList;
 }

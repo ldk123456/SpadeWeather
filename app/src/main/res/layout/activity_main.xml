@@ -68,11 +68,7 @@
 
                     <include layout="@layout/now_weather_layout" />
 
-                    <!--<include layout="@layout/hourly_forecast" />
-
                     <include layout="@layout/daily_forecast" />
-
-                    <include layout="@layout/lifestyle_layout" />-->
 
                 </LinearLayout>
 
