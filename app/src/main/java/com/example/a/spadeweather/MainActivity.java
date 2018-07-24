@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private CollapsingToolbarLayout toolbarLayout;
     private long exitTime;
+    private long startTime=0;
+    private long endTime=0;
     private  ActionBar mActionBar;
     public LocationClient mLocationClient;
     private static int LOCATION_FLAG = 0;
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_relocation:
                         mProgressBar.setVisibility(View.VISIBLE);
                         checkPermissions();
+                        mProgressBar.setVisibility(View.INVISIBLE);
                         break;
                     case R.id.nav_exit:
                         final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
@@ -313,11 +316,6 @@ public class MainActivity extends AppCompatActivity {
         requestNowAir(cityName);
         requestHourlyForecast(cityName);
         requestDailyForecast(cityName);
-        try {
-            Thread.sleep(100);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         mProgressBar.setVisibility(View.INVISIBLE);
         mWeatherLayout.setVisibility(View.VISIBLE);
         Snackbar.make(mSwipeRefreshLayout, "成功加载最新天气",
