@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
     private  ActionBar mActionBar;
     public LocationClient mLocationClient;
     private static int LOCATION_FLAG = 0;
-    private static String KEY="294858754f4f457fba305b0aed27f8e3";
+    private static String KEY0="294858754f4f457fba305b0aed27f8e3";
+    private static String KEY="b172b66828f44348818e44e94bf76ce1";
 
     private ImageView nowWeatherImage;
     private TextView nowDegreeText;
@@ -136,10 +137,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_relocation:
                         mProgressBar.setVisibility(View.VISIBLE);
                         checkPermissions();
-                        break;
-                    case R.id.nav_night_mode:
-                        Toast.makeText(MainActivity.this, "night",
-                                Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_exit:
                         final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
