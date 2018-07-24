@@ -1,5 +1,7 @@
 package com.example.a.spadeweather.util;
 
+import android.graphics.Color;
+
 import com.example.a.spadeweather.R;
 
 import java.util.Calendar;
@@ -12,6 +14,24 @@ public class ShowUtil {
         String moment=updateTime.split(" ")[1];
         String time=month+"-"+day+" "+moment;
         return time;
+    }
+    public static int showColor(String airText){
+        switch (airText){
+            case "优":
+                return Color.GREEN;
+            case "良":
+                return Color.GREEN;
+            case "轻度污染":
+                return Color.YELLOW;
+            case "中度污染":
+                return Color.YELLOW;
+            case "重度污染":
+                return Color.RED;
+            case "严重污染":
+                return Color.RED;
+            default:
+        }
+        return 0;
     }
     public static int showWeatherImage(String weatherImage){
         switch (weatherImage){

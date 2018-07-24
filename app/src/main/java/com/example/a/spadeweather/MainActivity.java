@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences.Editor editor;
 
+    private NestedScrollView mWeatherLayout;
     private DrawerLayout mDrawerLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar mProgressBar;
@@ -75,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private  ActionBar mActionBar;
     public LocationClient mLocationClient;
     private static int LOCATION_FLAG = 0;
-    private static String KEY0="294858754f4f457fba305b0aed27f8e3";
-    private static String KEY="b172b66828f44348818e44e94bf76ce1";
+    private static String KEY="294858754f4f457fba305b0aed27f8e3";
+    private static String KEY0="b172b66828f44348818e44e94bf76ce1";
 
     private ImageView nowWeatherImage;
     private TextView nowDegreeText;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+        mWeatherLayout=findViewById(R.id.weather_layout);
         mProgressBar=findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.VISIBLE);
         mLocationClient=new LocationClient(getApplicationContext());
@@ -119,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             if (cityName!=null){
                 editor.putString("title_name", cityName);
                 editor.apply();
+                mWeatherLayout.setVisibility(View.INVISIBLE);
                 requestWeather();
             }
         }
@@ -287,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
             String cityName=name1+","+name2;
             editor.putString("title_name", cityName);
             editor.apply();
+            mWeatherLayout.setVisibility(View.INVISIBLE);
             requestWeather();
             List<SearchedCity> searchedCities= LitePal.where("cityName = ?", cityName)
                     .find(SearchedCity.class);
@@ -308,7 +313,13 @@ public class MainActivity extends AppCompatActivity {
         requestNowAir(cityName);
         requestHourlyForecast(cityName);
         requestDailyForecast(cityName);
+        try {
+            Thread.sleep(100);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         mProgressBar.setVisibility(View.INVISIBLE);
+        mWeatherLayout.setVisibility(View.VISIBLE);
         Snackbar.make(mSwipeRefreshLayout, "成功加载最新天气",
                 Snackbar.LENGTH_SHORT).show();
     }
@@ -396,6 +407,7 @@ public class MainActivity extends AppCompatActivity {
         String airText=nowAir.aqi.airText;
         nowAirNumber.setText(airNumber);
         nowAirText.setText(airText);
+        nowAirText.setBackgroundColor(ShowUtil.showColor(airText));
     }
     private void requestHourlyForecast(final String cityName){
         final String hourlyForecastUrl="https://free-api.heweather.com/s6/weather/hourly?location="
@@ -432,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void requestDailyForecast(final String cityName){
         final String dailyForecastUrl="https://free-api.heweather.com/s6/weather/forecast?location="
-                +cityName+"&key="+KEY;
+                +cityName+"&key="+KEY0;
         HttpUtil.sendOkHttpRequest(dailyForecastUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
