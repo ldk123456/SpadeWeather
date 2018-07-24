@@ -3,13 +3,6 @@ package com.example.a.spadeweather.GSON;
 import com.google.gson.annotations.SerializedName;
 
 public class NowWeather {
-    public class Basic{
-        @SerializedName("cid")
-        public String cityId;
-        @SerializedName("location")
-        public String cityName;
-    }
-    public Basic basic;
     public class Now{
         @SerializedName("cond_code")
         public String weatherImage;

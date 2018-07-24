@@ -15,8 +15,10 @@
             android:layout_height="250dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:titleEnabled="false"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:contentScrim="@color/colorAccent"
                 app:layout_scrollFlags="exitUntilCollapsed|scroll">
@@ -67,6 +69,8 @@
                     android:layout_gravity="center_horizontal">
 
                     <include layout="@layout/now_weather_layout" />
+
+                    <include layout="@layout/hourly_forecast" />
 
                     <include layout="@layout/daily_forecast" />
 

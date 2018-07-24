@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class City{
     public class CityBasic{
-        @SerializedName("cid")
-        public String cityId;
         @SerializedName("location")
         public String cityName;
         @SerializedName("parent_city")

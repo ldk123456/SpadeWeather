@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -33,15 +35,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.a.spadeweather.GSON.City;
 import com.example.a.spadeweather.GSON.DailyForecast;
+import com.example.a.spadeweather.GSON.HourlyForecast;
 import com.example.a.spadeweather.GSON.NowAir;
 import com.example.a.spadeweather.GSON.NowWeather;
 import com.example.a.spadeweather.adapter.DailyForecastAdapter;
+import com.example.a.spadeweather.adapter.HourlyForecastAdapter;
 import com.example.a.spadeweather.database.SearchedCity;
 import com.example.a.spadeweather.util.HttpUtil;
 import com.example.a.spadeweather.util.ShowUtil;
@@ -60,16 +65,16 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
     private DrawerLayout mDrawerLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private NestedScrollView weatherLayout;
     private ProgressBar mProgressBar;
+    private CollapsingToolbarLayout toolbarLayout;
     private long exitTime;
-    private ActionBar mActionBar;
+    private  ActionBar mActionBar;
     public LocationClient mLocationClient;
-    private static int LOCATION_FLAG=0;
+    private static int LOCATION_FLAG = 0;
     private static String KEY="294858754f4f457fba305b0aed27f8e3";
 
     private ImageView nowWeatherImage;
@@ -80,36 +85,41 @@ public class MainActivity extends AppCompatActivity {
     private TextView updateTimeText;
 
     private RecyclerView dailyForecastLayout;
+    private RecyclerView hourlyForecastLayout;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar title=findViewById(R.id.title);
         setSupportActionBar(title);
+        editor=PreferenceManager
+                .getDefaultSharedPreferences(MainActivity.this).edit();
         mDrawerLayout=findViewById(R.id.drawer_layout);
         mSwipeRefreshLayout=findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshWeather();
+                requestWeather();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
-        weatherLayout=findViewById(R.id.weather_layout);
         mProgressBar=findViewById(R.id.progress_bar);
+        mProgressBar.setVisibility(View.VISIBLE);
         mLocationClient=new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
+        toolbarLayout=findViewById(R.id.toolbar_layout);
         mActionBar=getSupportActionBar();
         if (mActionBar!=null){
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
             String cityName=getIntent().getStringExtra("city_name");
-            editor=PreferenceManager
-                    .getDefaultSharedPreferences(MainActivity.this).edit();
-            editor.putString("city_name", cityName);
-            editor.apply();
-            mProgressBar.setVisibility(View.VISIBLE);
-            requestWeather();
+            if (cityName!=null){
+                editor.putString("title_name", cityName);
+                editor.apply();
+                requestWeather();
+            }
         }
         final NavigationView navView=findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(new NavigationView.
@@ -118,10 +128,14 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_city_manage:
-                        Intent intent=new Intent(MainActivity.this,
+                        Intent manageIntent=new Intent(MainActivity.this,
                                 CityManageActivity.class);
-                        intent.putExtra("city_name", mActionBar.getTitle());
-                        startActivity(intent);
+                        manageIntent.putExtra("city_name", mActionBar.getTitle());
+                        startActivity(manageIntent);
+                        break;
+                    case R.id.nav_relocation:
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        checkPermissions();
                         break;
                     case R.id.nav_night_mode:
                         Toast.makeText(MainActivity.this, "night",
@@ -155,13 +169,12 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, SearchCityActivity.class);
-                startActivity(intent);
+                Intent searchIntent=new Intent(MainActivity.this, SearchCityActivity.class);
+                startActivity(searchIntent);
             }
         });
         if (isNetWorkAvailable(this)){
             if (LOCATION_FLAG==0){
-                mProgressBar.setVisibility(View.VISIBLE);
                 checkPermissions();
                 LOCATION_FLAG=1;
             }
@@ -178,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
         updateTimeText=findViewById(R.id.updateTime_text);
 
         dailyForecastLayout=findViewById(R.id.daily_forecast_layout);
+        hourlyForecastLayout=findViewById(R.id.hourly_forecast_layout);
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -189,20 +204,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
-    }
-    private void refreshWeather(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        requestWeather();
-                    }
-                });
-            }
-        }).start();
     }
     @Override
     public void onBackPressed() {
@@ -274,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
     }
-    public class MyLocationListener implements BDLocationListener {
+    public class MyLocationListener extends BDAbstractLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
@@ -287,9 +288,7 @@ public class MainActivity extends AppCompatActivity {
             }
             String name2=bdLocation.getCity().split("市")[0];
             String cityName=name1+","+name2;
-            editor=PreferenceManager
-                    .getDefaultSharedPreferences(MainActivity.this).edit();
-            editor.putString("city_name", cityName);
+            editor.putString("title_name", cityName);
             editor.apply();
             requestWeather();
             List<SearchedCity> searchedCities= LitePal.where("cityName = ?", cityName)
@@ -302,17 +301,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void requestWeather(){
-        weatherLayout.setVisibility(View.INVISIBLE);
         SharedPreferences preferences=PreferenceManager
                 .getDefaultSharedPreferences(this);
-        final String cityName=preferences.getString("city_name",null);
+        String cityName=preferences.getString("title_name",null);
+        toolbarLayout.setTitleEnabled(true);
+        toolbarLayout.setTitle(cityName);
         mActionBar.setTitle(cityName);
         requestNowWeather(cityName);
         requestNowAir(cityName);
+        requestHourlyForecast(cityName);
         requestDailyForecast(cityName);
-        mSwipeRefreshLayout.setRefreshing(false);
         mProgressBar.setVisibility(View.INVISIBLE);
-        weatherLayout.setVisibility(View.VISIBLE);
+        Snackbar.make(mSwipeRefreshLayout, "成功加载最新天气",
+                Snackbar.LENGTH_SHORT).show();
     }
     private void requestNowWeather(final String cityName){
         final String nowWeatherUrl="https://free-api.heweather.com/s6/weather/now?location="
@@ -361,8 +362,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final String responseText=response.body().string();
-                final City city=Utility.handleCityResponse(responseText);
+                final String nowAirResponse=response.body().string();
+                final City city=Utility.handleCityResponse(nowAirResponse);
                 if (city!=null&&city.status.equals("ok")){
                     String location=city.basic[0].parentCity;
                     final String nowAirUrl="https://free-api.heweather.com/s6/air/now?location="
@@ -399,6 +400,39 @@ public class MainActivity extends AppCompatActivity {
         nowAirNumber.setText(airNumber);
         nowAirText.setText(airText);
     }
+    private void requestHourlyForecast(final String cityName){
+        final String hourlyForecastUrl="https://free-api.heweather.com/s6/weather/hourly?location="
+                +cityName+"&key="+KEY;
+        HttpUtil.sendOkHttpRequest(hourlyForecastUrl, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Snackbar.make(mSwipeRefreshLayout, "请求逐小时天气信息失败",
+                        Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String hourlyForecastResponseText=response.body().string();
+                final HourlyForecast hourlyForecast=Utility.handleHourlyForecastResponse(hourlyForecastResponseText);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (hourlyForecast!=null&&hourlyForecast.status.equals("ok")){
+                            showHourlyForecastInfo(hourlyForecast);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    private void showHourlyForecastInfo(HourlyForecast hourlyForecast){
+        List<HourlyForecast.Forecast> hourlyForecastList=hourlyForecast.hourlyForecastList;
+        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        hourlyForecastLayout.setLayoutManager(layoutManager);
+        HourlyForecastAdapter hourlyForecastAdapter=new
+                HourlyForecastAdapter(hourlyForecastList);
+        hourlyForecastLayout.setAdapter(hourlyForecastAdapter);
+    }
     private void requestDailyForecast(final String cityName){
         final String dailyForecastUrl="https://free-api.heweather.com/s6/weather/forecast?location="
                 +cityName+"&key="+KEY;
@@ -411,20 +445,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final String nowWeatherResponseText=response.body().string();
-                final DailyForecast dailyForecast=Utility.handleDailyForecastResponse(nowWeatherResponseText);
+                final String dailyForecastResponseText=response.body().string();
+                final DailyForecast dailyForecast=Utility.handleDailyForecastResponse(dailyForecastResponseText);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (dailyForecast!=null&&dailyForecast.status.equals("ok")){
-                            showDailyForecast(dailyForecast);
+                            showDailyForecastInfo(dailyForecast);
                         }
                     }
                 });
             }
         });
     }
-    private void showDailyForecast(DailyForecast dailyForecast){
+    private void showDailyForecastInfo(DailyForecast dailyForecast){
         List<DailyForecast.Forecast> dailyForecastList=dailyForecast.dailyForecastList;
         StaggeredGridLayoutManager layoutManager=new
                 StaggeredGridLayoutManager(dailyForecastList.size(),

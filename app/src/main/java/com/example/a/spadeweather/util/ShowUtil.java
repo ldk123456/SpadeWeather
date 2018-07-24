@@ -185,4 +185,8 @@ public class ShowUtil {
         }
         return null;
     }
+    public static String showHourlyTime(String hourlyTime){
+        String time=hourlyTime.split(" ")[1];
+        return time;
+    }
 }
