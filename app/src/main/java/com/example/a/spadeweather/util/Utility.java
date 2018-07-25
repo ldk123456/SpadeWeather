@@ -3,6 +3,7 @@ package com.example.a.spadeweather.util;
 import com.example.a.spadeweather.GSON.City;
 import com.example.a.spadeweather.GSON.DailyForecast;
 import com.example.a.spadeweather.GSON.HourlyForecast;
+import com.example.a.spadeweather.GSON.LifeStyle;
 import com.example.a.spadeweather.GSON.NowAir;
 import com.example.a.spadeweather.GSON.NowWeather;
 import com.google.gson.Gson;
@@ -61,6 +62,17 @@ public class Utility {
             JSONArray jsonArray=jsonObject.getJSONArray("HeWeather6");
             String hourlyForecastContent=jsonArray.getJSONObject(0).toString();
             return new Gson().fromJson(hourlyForecastContent, HourlyForecast.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static LifeStyle handleLifestyleResponse(String response){
+        try {
+            JSONObject jsonObject=new JSONObject(response);
+            JSONArray jsonArray=jsonObject.getJSONArray("HeWeather6");
+            String lifestyleContent=jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(lifestyleContent, LifeStyle.class);
         }catch (Exception e){
             e.printStackTrace();
         }

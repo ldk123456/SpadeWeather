@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.a.spadeweather.GSON.HourlyForecast;
 import com.example.a.spadeweather.R;
 import com.example.a.spadeweather.util.ShowUtil;
@@ -53,7 +54,7 @@ public class HourlyForecastAdapter extends RecyclerView.Adapter<HourlyForecastAd
         String time= ShowUtil.showHourlyTime(hourlyForecast.hourlyTime);
         holder.hourlyTime.setText(time);
         int hourlyWeatherImageId=ShowUtil.showWeatherImage(hourlyForecast.hourlyWeatherImage);
-        holder.hourlyWeatherImage.setImageResource(hourlyWeatherImageId);
+        Glide.with(holder.itemView).load(hourlyWeatherImageId).into(holder.hourlyWeatherImage);
         holder.hourlyWeatherText.setText(hourlyForecast.hourlyWeatherText);
         holder.hourlyTemperature.setText(hourlyForecast.hourlyTemperature);
     }

@@ -196,4 +196,48 @@ public class ShowUtil {
         String time=hourlyTime.split(" ")[1];
         return time;
     }
+    public static int showLifestyleImage(String lifestyleType){
+        switch (lifestyleType){
+            case "comf":
+                return R.mipmap.ic_comf;
+            case "drsg":
+                return R.mipmap.ic_drsg;
+            case "flu":
+                return R.mipmap.ic_flu;
+            case "sport":
+                return R.mipmap.ic_sport;
+            case "trav":
+                return R.mipmap.ic_trav;
+            case "uv":
+                return R.mipmap.ic_uv;
+            case "cw":
+                return R.mipmap.ic_car_wash;
+            case "air":
+                return R.mipmap.ic_air;
+            default:
+        }
+        return 0;
+    }
+    public static String showLifestyleType(String lifestyleType){
+        switch (lifestyleType){
+            case "comf":
+                return "舒适";
+            case "drsg":
+                return "穿衣";
+            case "flu":
+                return "感冒";
+            case "sport":
+                return "运动";
+            case "trav":
+                return "旅游";
+            case "uv":
+                return "紫外线";
+            case "cw":
+                return "洗车";
+            case "air":
+                return "空气";
+            default:
+        }
+        return null;
+    }
 }

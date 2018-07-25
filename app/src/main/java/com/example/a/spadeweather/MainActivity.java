@@ -41,6 +41,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.bumptech.glide.Glide;
 import com.example.a.spadeweather.GSON.City;
 import com.example.a.spadeweather.GSON.DailyForecast;
 import com.example.a.spadeweather.GSON.HourlyForecast;
@@ -359,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
         nowDegreeText.setText(nowDegree);
         nowWeatherText.setText(nowWeatherInfo);
         updateTimeText.setText(time);
-        nowWeatherImage.setImageResource(nowWeatherImageId);
+        Glide.with(this).load(nowWeatherImageId).into(nowWeatherImage);
     }
     private void requestNowAir(final String cityName){
         final String searchCityUrl="https://search.heweather.com/find?location="+cityName

@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.example.a.spadeweather.GSON.DailyForecast;
 import com.example.a.spadeweather.R;
 import com.example.a.spadeweather.util.ShowUtil;
@@ -54,8 +56,8 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
         DailyForecast.Forecast dailyForecast=mDailyForecastList.get(position);
         String dailyUpdateTime=ShowUtil.showDailyTime(dailyForecast.updateTime);
         holder.dailyUpdateTime.setText(dailyUpdateTime);
-        int weatherImage= ShowUtil.showWeatherImage(dailyForecast.weatherImage);
-        holder.dailyWeatherImage.setImageResource(weatherImage);
+        int weatherImageId= ShowUtil.showWeatherImage(dailyForecast.weatherImage);
+        Glide.with(holder.itemView).load(weatherImageId).into(holder.dailyWeatherImage);
         holder.dailyWeatherText.setText(dailyForecast.weatherText);
         String degreeText=dailyForecast.minTemperature+"° ~ "+
                 dailyForecast.maxTemperature+"°";
