@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private CollapsingToolbarLayout toolbarLayout;
     private long exitTime;
-    private  ActionBar mActionBar;
     public LocationClient mLocationClient;
     private static int LOCATION_FLAG = 0;
     private static String KEY="294858754f4f457fba305b0aed27f8e3";
@@ -94,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar title=findViewById(R.id.title);
-        setSupportActionBar(title);
         editor=PreferenceManager
                 .getDefaultSharedPreferences(MainActivity.this).edit();
         mDrawerLayout=findViewById(R.id.drawer_layout);
@@ -114,10 +111,12 @@ public class MainActivity extends AppCompatActivity {
         mLocationClient=new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
         toolbarLayout=findViewById(R.id.toolbar_layout);
-        mActionBar=getSupportActionBar();
-        if (mActionBar!=null){
-            mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        Toolbar title=findViewById(R.id.title);
+        setSupportActionBar(title);
+        ActionBar actionBar=getSupportActionBar();
+        if (actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
             String cityName=getIntent().getStringExtra("city_name");
             if (cityName!=null){
                 editor.putString("title_name", cityName);
@@ -140,13 +139,13 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_city_manage:
                         Intent manageIntent=new Intent(MainActivity.this,
                                 CityManageActivity.class);
-                        manageIntent.putExtra("city_name", mActionBar.getTitle());
+                        manageIntent.putExtra("city_name", toolbarLayout.getTitle());
                         startActivity(manageIntent);
                         break;
                     case R.id.nav_lifestyle:
                         Intent lifeIntent=new Intent(MainActivity.this,
                                 LifestyleActivity.class);
-                        lifeIntent.putExtra("city_name", mActionBar.getTitle());
+                        lifeIntent.putExtra("city_name", toolbarLayout.getTitle());
                         startActivity(lifeIntent);
                         break;
                     case R.id.nav_exit:
@@ -315,7 +314,6 @@ public class MainActivity extends AppCompatActivity {
         String cityName=preferences.getString("title_name",null);
         toolbarLayout.setTitleEnabled(true);
         toolbarLayout.setTitle(cityName);
-        mActionBar.setTitle(cityName);
         requestNowWeather(cityName);
         requestNowAir(cityName);
         requestHourlyForecast(cityName);

@@ -20,8 +20,8 @@
                 android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:titleEnabled="false"
                 android:fitsSystemWindows="true"
+                app:titleEnabled="false"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:contentScrim="@color/colorAccent"
                 app:layout_scrollFlags="exitUntilCollapsed|scroll">
