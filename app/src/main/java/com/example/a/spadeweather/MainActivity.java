@@ -74,13 +74,10 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private CollapsingToolbarLayout toolbarLayout;
     private long exitTime;
-    private long startTime=0;
-    private long endTime=0;
     private  ActionBar mActionBar;
     public LocationClient mLocationClient;
     private static int LOCATION_FLAG = 0;
     private static String KEY="294858754f4f457fba305b0aed27f8e3";
-    private static String KEY0="b172b66828f44348818e44e94bf76ce1";
 
     private ImageView nowWeatherImage;
     private TextView nowDegreeText;
@@ -442,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void requestDailyForecast(final String cityName){
         final String dailyForecastUrl="https://free-api.heweather.com/s6/weather/forecast?location="
-                +cityName+"&key="+KEY0;
+                +cityName+"&key="+KEY;
         HttpUtil.sendOkHttpRequest(dailyForecastUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -468,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
     private void showDailyForecastInfo(DailyForecast dailyForecast){
         List<DailyForecast.Forecast> dailyForecastList=dailyForecast.dailyForecastList;
         StaggeredGridLayoutManager layoutManager=new
-                StaggeredGridLayoutManager(dailyForecastList.size(),
+                StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL);
         dailyForecastLayout.setLayoutManager(layoutManager);
         DailyForecastAdapter dailyForecastAdapter=new DailyForecastAdapter(dailyForecastList);

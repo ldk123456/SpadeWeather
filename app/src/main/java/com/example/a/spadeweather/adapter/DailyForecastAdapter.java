@@ -34,6 +34,8 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
     }
 
     public DailyForecastAdapter(List<DailyForecast.Forecast> dailyForecastList) {
+        DailyForecast.Forecast firstForecast=dailyForecastList.get(0);
+        dailyForecastList.remove(firstForecast);
         mDailyForecastList=dailyForecastList;
     }
 
