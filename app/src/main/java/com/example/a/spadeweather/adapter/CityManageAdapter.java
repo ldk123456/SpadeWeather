@@ -3,6 +3,8 @@ package com.example.a.spadeweather.adapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,6 +37,7 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
             cityManageText=itemView.findViewById(R.id.city_manage_text);
             currentCityImage=itemView.findViewById(R.id.current_city_image);
             currentCityText=itemView.findViewById(R.id.current_city_text);
+
         }
     }
 
@@ -45,7 +48,7 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext())
+        final View view= LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.city_manage_item, parent,false);
         final ViewHolder holder=new ViewHolder(view);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +80,8 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
                         notifyItemRangeChanged(0, mSearchedCityList.size());
                         LitePal.deleteAll(SearchedCity.class, "cityName = ?",
                                 searchedCity.getCityName());
+                        Snackbar.make(holder.itemView, "删除城市成功",
+                                Snackbar.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

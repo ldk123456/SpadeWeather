@@ -23,7 +23,7 @@
                 android:fitsSystemWindows="true"
                 app:titleEnabled="false"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:contentScrim="@color/colorAccent"
+                app:contentScrim="@color/colorPrimary"
                 app:layout_scrollFlags="exitUntilCollapsed|scroll">
 
                 <ImageView

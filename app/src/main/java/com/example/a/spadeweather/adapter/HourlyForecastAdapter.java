@@ -54,7 +54,7 @@ public class HourlyForecastAdapter extends RecyclerView.Adapter<HourlyForecastAd
         String time= ShowUtil.showHourlyTime(hourlyForecast.hourlyTime);
         holder.hourlyTime.setText(time);
         int hourlyWeatherImageId=ShowUtil.showWeatherImage(hourlyForecast.hourlyWeatherImage);
-        Glide.with(holder.itemView).load(hourlyWeatherImageId).into(holder.hourlyWeatherImage);
+        holder.hourlyWeatherImage.setImageResource(hourlyWeatherImageId);
         holder.hourlyWeatherText.setText(hourlyForecast.hourlyWeatherText);
         holder.hourlyTemperature.setText(hourlyForecast.hourlyTemperature);
     }

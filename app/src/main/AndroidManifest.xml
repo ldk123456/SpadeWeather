@@ -31,7 +31,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:theme="@style/MainActivityTheme">
+            android:theme="@style/TransparentTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,7 +46,9 @@
 
         <activity android:name=".SearchCityActivity" />
         <activity android:name=".CityManageActivity" />
-        <activity android:name=".LifestyleActivity"></activity>
+        <activity
+            android:name=".LifestyleActivity"
+            android:theme="@style/TransparentTheme"></activity>
     </application>
 
 </manifest>

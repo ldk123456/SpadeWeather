@@ -11,7 +11,7 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="MainActivityTheme" parent="AppTheme">
+    <style name="TransparentTheme" parent="AppTheme">
     </style>
 
 </resources>

@@ -53,7 +53,7 @@ public class LifestyleAdapter extends RecyclerView.Adapter<LifestyleAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LifeStyle.Suggestion suggestion=mSuggestionList.get(position);
         int lifestyleImageId=ShowUtil.showLifestyleImage(suggestion.suggestionType);
-        Glide.with(holder.itemView).load(lifestyleImageId).into(holder.suggestionImage);
+        holder.suggestionImage.setImageResource(lifestyleImageId);
         String lifestyleType=ShowUtil.showLifestyleType(suggestion.suggestionType);
         holder.suggestionType.setText(lifestyleType);
         holder.suggestionBrf.setText(suggestion.suggestionBrf);

@@ -132,9 +132,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_relocation:
-                        mProgressBar.setVisibility(View.VISIBLE);
+                        if (mProgressBar.getVisibility()==View.INVISIBLE){
+                            mProgressBar.setVisibility(View.VISIBLE);
+                        }
                         checkPermissions();
-                        mProgressBar.setVisibility(View.INVISIBLE);
                         break;
                     case R.id.nav_city_manage:
                         Intent manageIntent=new Intent(MainActivity.this,
@@ -318,10 +319,6 @@ public class MainActivity extends AppCompatActivity {
         requestNowAir(cityName);
         requestHourlyForecast(cityName);
         requestDailyForecast(cityName);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mWeatherLayout.setVisibility(View.VISIBLE);
-        Snackbar.make(mSwipeRefreshLayout, "成功加载最新天气",
-                Snackbar.LENGTH_SHORT).show();
     }
     private void requestNowWeather(final String cityName){
         final String nowWeatherUrl="https://free-api.heweather.com/s6/weather/now?location="
@@ -358,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
         nowDegreeText.setText(nowDegree);
         nowWeatherText.setText(nowWeatherInfo);
         updateTimeText.setText(time);
-        Glide.with(this).load(nowWeatherImageId).into(nowWeatherImage);
+        nowWeatherImage.setImageResource(nowWeatherImageId);
     }
     private void requestNowAir(final String cityName){
         final String searchCityUrl="https://search.heweather.com/find?location="+cityName
@@ -475,5 +472,9 @@ public class MainActivity extends AppCompatActivity {
         dailyForecastLayout.setLayoutManager(layoutManager);
         DailyForecastAdapter dailyForecastAdapter=new DailyForecastAdapter(dailyForecastList);
         dailyForecastLayout.setAdapter(dailyForecastAdapter);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mWeatherLayout.setVisibility(View.VISIBLE);
+        Snackbar.make(mSwipeRefreshLayout, "成功加载最新天气",
+                Snackbar.LENGTH_SHORT).show();
     }
 }

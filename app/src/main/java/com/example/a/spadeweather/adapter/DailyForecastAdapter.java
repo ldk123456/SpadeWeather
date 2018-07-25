@@ -57,7 +57,7 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
         String dailyUpdateTime=ShowUtil.showDailyTime(dailyForecast.updateTime);
         holder.dailyUpdateTime.setText(dailyUpdateTime);
         int weatherImageId= ShowUtil.showWeatherImage(dailyForecast.weatherImage);
-        Glide.with(holder.itemView).load(weatherImageId).into(holder.dailyWeatherImage);
+        holder.dailyWeatherImage.setImageResource(weatherImageId);
         holder.dailyWeatherText.setText(dailyForecast.weatherText);
         String degreeText=dailyForecast.minTemperature+"° ~ "+
                 dailyForecast.maxTemperature+"°";
