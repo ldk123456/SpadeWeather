@@ -29,7 +29,9 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="3KvwkyQp1aDRmIemF39kqmYGDCZwgUML" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/MainActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,6 +46,7 @@
 
         <activity android:name=".SearchCityActivity" />
         <activity android:name=".CityManageActivity" />
+        <activity android:name=".LifestyleActivity"></activity>
     </application>
 
 </manifest>

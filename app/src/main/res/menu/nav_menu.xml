@@ -3,14 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <item
+            android:id="@+id/nav_relocation"
+            android:icon="@mipmap/ic_relocation"
+            android:title="重新定位" />
+
+        <item
             android:id="@+id/nav_city_manage"
             android:icon="@mipmap/ic_city"
             android:title="城市管理" />
 
         <item
-            android:id="@+id/nav_relocation"
-            android:icon="@mipmap/ic_relocation"
-            android:title="重新定位" />
+            android:id="@+id/nav_lifestyle"
+            android:icon="@mipmap/ic_life"
+            android:title="生活指数" />
 
         <item
             android:id="@+id/nav_exit"

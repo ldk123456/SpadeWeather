@@ -131,16 +131,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
+                    case R.id.nav_relocation:
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        checkPermissions();
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        break;
                     case R.id.nav_city_manage:
                         Intent manageIntent=new Intent(MainActivity.this,
                                 CityManageActivity.class);
                         manageIntent.putExtra("city_name", mActionBar.getTitle());
                         startActivity(manageIntent);
                         break;
-                    case R.id.nav_relocation:
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        checkPermissions();
-                        mProgressBar.setVisibility(View.INVISIBLE);
+                    case R.id.nav_lifestyle:
+                        Intent lifeIntent=new Intent(MainActivity.this,
+                                LifestyleActivity.class);
+                        lifeIntent.putExtra("city_name", mActionBar.getTitle());
+                        startActivity(lifeIntent);
                         break;
                     case R.id.nav_exit:
                         final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
