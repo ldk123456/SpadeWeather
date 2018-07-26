@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         });
         mWeatherLayout=findViewById(R.id.weather_layout);
         mProgressBar=findViewById(R.id.progress_bar);
-        mProgressBar.setVisibility(View.VISIBLE);
         mLocationClient=new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
         toolbarLayout=findViewById(R.id.toolbar_layout);
@@ -121,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             if (cityName!=null){
                 editor.putString("title_name", cityName);
                 editor.apply();
-                mWeatherLayout.setVisibility(View.INVISIBLE);
                 requestWeather();
             }
         }
@@ -132,10 +130,9 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_relocation:
-                        if (mProgressBar.getVisibility()==View.INVISIBLE){
-                            mProgressBar.setVisibility(View.VISIBLE);
-                        }
+
                         checkPermissions();
+
                         break;
                     case R.id.nav_city_manage:
                         Intent manageIntent=new Intent(MainActivity.this,
@@ -298,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
             String cityName=name1+","+name2;
             editor.putString("title_name", cityName);
             editor.apply();
-            mWeatherLayout.setVisibility(View.INVISIBLE);
             requestWeather();
             List<SearchedCity> searchedCities= LitePal.where("cityName = ?", cityName)
                     .find(SearchedCity.class);
@@ -310,6 +306,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void requestWeather(){
+        mWeatherLayout.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
         SharedPreferences preferences=PreferenceManager
                 .getDefaultSharedPreferences(this);
         String cityName=preferences.getString("title_name",null);
