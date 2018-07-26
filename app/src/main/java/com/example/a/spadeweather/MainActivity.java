@@ -130,9 +130,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_relocation:
-
                         checkPermissions();
-
                         break;
                     case R.id.nav_city_manage:
                         Intent manageIntent=new Intent(MainActivity.this,

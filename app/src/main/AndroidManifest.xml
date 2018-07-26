@@ -32,11 +32,6 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/TransparentTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service
@@ -48,7 +43,16 @@
         <activity android:name=".CityManageActivity" />
         <activity
             android:name=".LifestyleActivity"
-            android:theme="@style/TransparentTheme"></activity>
+            android:theme="@style/TransparentTheme" />
+        <activity
+            android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

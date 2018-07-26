@@ -72,7 +72,7 @@ public class LifestyleActivity extends AppCompatActivity {
     }
 
     private void requestLifestyle(final String cityName){
-        final String lifestyleUrl="https://free-api.heweather.com/s6/weather/lifestyle?location"
+        final String lifestyleUrl="https://free-api.heweather.com/s6/weather/lifestyle?location="
                 +cityName+"&key="+KEY;
         HttpUtil.sendOkHttpRequest(lifestyleUrl, new Callback() {
             @Override
