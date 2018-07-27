@@ -37,6 +37,7 @@ public class SearchCityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_search_city);
         Button searchBtn=findViewById(R.id.search_btn);
         searchText=findViewById(R.id.search_city_text);

@@ -16,6 +16,7 @@
         android:id="@+id/daily_forecast_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         android:layout_gravity="center_horizontal"/>
 
 </android.support.v7.widget.CardView>

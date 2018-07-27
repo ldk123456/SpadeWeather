@@ -1,10 +1,10 @@
-# SpadeWeather
+﻿# SpadeWeather
 ## 简介
 一个简单的天气应用，遵循material design的设计风格
 
 [下载地址：https://fir.im/SpadeWeather](https://fir.im/SpadeWeather)
 ## 预览
-<img src="https://github.com/ldk123456/SpadeWeather/blob/master/app/src/main/res/images/splash_image.png" width="400" height="800" alt="启动页"/>         <img src="https://github.com/ldk123456/SpadeWeather/blob/master/app/src/main/res/images/main_image.png" width="400" height="800" alt="主界面"/>  <img src="https://github.com/ldk123456/SpadeWeather/blob/master/app/src/main/res/images/menu_image.png" width="400" height="800" alt="菜单"/>                                                                                                   <img src="https://github.com/ldk123456/SpadeWeather/blob/master/app/src/main/res/images/life_image.png" width="400" height="800" alt="生活指数"/>  <img src="https://github.com/ldk123456/SpadeWeather/blob/master/app/src/main/res/images/search_image.png" width="400" height="800" alt="搜索城市"/>        <img src="https://github.com/ldk123456/SpadeWeather/blob/master/app/src/main/res/images/manage_image.png" width="400" height="800" alt="城市管理"/>
+<img src="https://github.com/ldk123456/SpadeWeather/blob/master/images/splash_image.png" width="400" height="800" alt="启动页"/>         <img src="https://github.com/ldk123456/SpadeWeather/blob/master/images/main_image.png" width="400" height="800" alt="主界面"/>  <img src="https://github.com/ldk123456/SpadeWeather/blob/master/images/menu_image.png" width="400" height="800" alt="菜单"/>                                                                                                   <img src="https://github.com/ldk123456/SpadeWeather/blob/master/images/life_image.png" width="400" height="800" alt="生活指数"/>  <img src="https://github.com/ldk123456/SpadeWeather/blob/master/images/search_image.png" width="400" height="800" alt="搜索城市"/>        <img src="https://github.com/ldk123456/SpadeWeather/blob/master/images/manage_image.png" width="400" height="800" alt="城市管理"/>
 ## 功能
 * 定位
 * 搜索城市
